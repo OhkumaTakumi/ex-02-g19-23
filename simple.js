@@ -63,7 +63,7 @@ server.on('request', function(req, res) {
         case 'GET':
             if(path.match(/^\/id\/\d+$/)) {
             // $ curl -i -X GET http://127.0.0.1:3000
-                path = path.replace( /^\/id\/\d+$/g , "" )
+                path = path.replace( /\/id\//g , "" )
                 var body = JSON.stringify(items[Number(path)].data, null, '\t');
                 body += '\n';
                 res.setHeader('Content-Length', Buffer.byteLength(body));
