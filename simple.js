@@ -7,7 +7,7 @@
  * w1$ node simple.js
  * Server running at http://127.0.0.1:3000/
  *
- * 
+ *
  * 2) To test, on other window:
  * w2$ curl -i -X GET http://127.0.0.1:3000/
  * HTTP/1.1 200 OK
@@ -15,7 +15,7 @@
  * Content-Length: 159
  * Content-Type: application/json; charset=utf8
  * Date: Tue, 18 Apr 2017 07:06:01 GMT
- * 
+ *
  * [
  * 	{
  * 		"id": 0,
@@ -61,9 +61,10 @@ server.on('request', function(req, res) {
     res.setHeader('Connection', 'closed');
     switch(req.method) {
         case 'GET':
-            if(path.match(/^\/$/)) {
+            if(path.match(/^\/id\/\d+$/)) {
             // $ curl -i -X GET http://127.0.0.1:3000
-                var body = JSON.stringify(items, null, '\t');
+                path = path.replace( /\/id\//g , "" )
+                var body = JSON.stringify(items[Number(path)].data, null, '\t');
                 body += '\n';
                 res.setHeader('Content-Length', Buffer.byteLength(body));
                 res.setHeader('Content-Type', 'application/json; charset=utf8');
