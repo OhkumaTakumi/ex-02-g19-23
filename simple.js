@@ -117,6 +117,46 @@ server.on('request', function(req, res) {
                 res.end('Bad Request');
             }
             break;
+            case 'PUT':
+            if(path.match(/^\/id\/\d+$/)) {
+            // $ curl -i -v --data '{"data":"testdata"}' -X PUT http://127.0.0.1:3000/id/:number
+                const number = Number(path.replace( /\/id\//g , "" ))
+                var item;
+                var data = '';
+                req.on('data', function(chunk){
+                    data += chunk;
+                });
+                req.on('end', function(){
+                    try {
+                        item = JSON.parse(data, function(key, value) {
+                            if(key === '' ) return value;
+                            if(key === 'data') return value;
+                        });
+                    } catch(e) {
+                        res.statusCode = 400;
+                        res.statusMessage = e.message;
+                        res.end('Ba Request');
+                    }
+                    if('data' in item){
+                        items[number].data = item.data
+                        var body = JSON.stringify(item, null, '\t');
+                        res.setHeader('Content-Length', Buffer.byteLength(body));
+                        res.setHeader('Content-Type', 'application/json; charset=utf8');
+                        res.statusCode = 200;
+                        res.statusMessage = 'OK';
+                        res.end(body);
+                    }else{
+                        res.statusCode = 400;
+                        res.statusMessage = ('Bad Request');
+                        res.end('Bad Request');
+                    }
+                });
+            } else {
+                res.statusCode = 400;
+                res.statusMessage = ('Bad Request');
+                res.end('Bad Request');
+            }
+            break;
         default:
             res.statusCode = 400;
             res.statusMessage = ('Bad Request');
